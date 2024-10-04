@@ -5,7 +5,7 @@
 ## Como utilizar?
 - Adicione os arquivos .pdf na pasta raiz do script
 
-- Utilize os comandos abaixo para realizar a instalação das dependencias.
+- Utilize os comandos abaixo para realizar a instalação das dependências.
 
 - Crie um venv
 ```python3 -m venv .venv```
@@ -14,4 +14,4 @@
 ```source .venv/bin/activate```
 
 - Instale o pdfplumber
-```pip install pdfplumber && source .venv/bin/activate```
+```pip install pdfplumber```
