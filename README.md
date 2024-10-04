@@ -3,8 +3,6 @@
 - Deve ser um pdf com 3 clunas sendo a terceira que deve conter os endereços para bloquear.
 
 ## Como utilizar?
-- Adicione os arquivos .pdf na pasta raiz do script
-
 - Utilize os comandos abaixo para realizar a instalação das dependências.
 
 - Crie um venv
@@ -15,3 +13,6 @@
 
 - Instale o pdfplumber
 ```pip install pdfplumber```
+
+- Adicione todos os arquivos pdf dentro da pasta contendo o main.py e rode o script
+```python3 main.py```
