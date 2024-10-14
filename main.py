@@ -17,7 +17,7 @@ def is_valid_ip(ip):
     except ValueError:
         return False
 
-def extract_data_from_pdf(pdf_path):
+def extract_data_from_pdf(pdf_path, col_extract):
     """
     Extrai dados da terceira coluna de tabelas com pelo menos 3 colunas em um PDF específico.
 
@@ -41,14 +41,14 @@ def extract_data_from_pdf(pdf_path):
                         # Itera sobre as linhas da tabela
                         for row_index, row in enumerate(table, start=1):
                             # Verifica se a linha tem pelo menos 3 colunas e pula a primeira linha (cabeçalho)
-                            if len(row) >= 3 and row_index > 1 and not is_valid_ip(row[2]):
-                                terceiro_dado = row[2]
-                                if terceiro_dado and terceiro_dado.strip():
+                            if len(row) >= col_extract and row_index > 1 and not is_valid_ip(row[col_extract]):
+                                dado_da_coluna = row[col_extract]
+                                if dado_da_coluna and dado_da_coluna.strip():
                                     # Formata a linha para o arquivo de output
-                                    formatted_line = f"local-zone: \"{terceiro_dado.strip()}\" always_nxdomain\n"
+                                    formatted_line = f"local-zone: \"{dado_da_coluna.strip()}\" always_nxdomain\n"
                                     output_lines.append(formatted_line)
                                     # Imprime a mensagem de log
-                                    print(f"Arquivo: {pdf_path.name} | Página {i}, Tabela {table_index}, Linha {row_index}: '{terceiro_dado.strip()}' adicionada no output")
+                                    print(f"Arquivo: {pdf_path.name} | Página {i}, Tabela {table_index}, Linha {row_index}: '{dado_da_coluna.strip()}' adicionada no output")
                 else:
                     # Indica que a página não possui tabelas
                     print(f"Arquivo: {pdf_path.name} | Página {i}: Não possui tabelas.")
@@ -58,6 +58,12 @@ def extract_data_from_pdf(pdf_path):
     return output_lines
 
 def main():
+
+    # solicita ao usuario qual a colunar que ele quer extrair
+    col_extract = input("Digite o número da coluna que deseja extrair (1,2,3...): ")
+
+    col_extract = int(col_extract) -1
+
     # Define o diretório atual onde o script está localizado
     current_dir = Path(__file__).parent
 
@@ -77,7 +83,7 @@ def main():
     with concurrent.futures.ProcessPoolExecutor() as executor:
         # Mapeia a função extract_data_from_pdf para cada PDF encontrado
         # Isso retorna um gerador de futuros
-        futures = {executor.submit(extract_data_from_pdf, pdf_path): pdf_path for pdf_path in pdf_files}
+        futures = {executor.submit(extract_data_from_pdf, pdf_path, col_extract): pdf_path for pdf_path in pdf_files}
 
         for future in concurrent.futures.as_completed(futures):
             pdf_path = futures[future]
