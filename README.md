@@ -4,7 +4,7 @@
 
 ## Como instalar?
 - Baixe o binário em releases coloque na mesma pasta dos arquivos .pdf que deseja extrair e rode o comando.
-```chmod +x && sudo mv ./pdf-extractor* /usr/bin/pdf-extractor```
+```chmod +x pdf-extractor* && sudo mv ./pdf-extractor* /usr/bin/pdf-extractor```
 
 
 ## Como utilizar o codigo fonte?
