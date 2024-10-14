@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 import concurrent.futures
 import ipaddress
+import sys
 
 def is_valid_ip(ip):
     """
@@ -65,10 +66,17 @@ def main():
     col_extract = int(col_extract) -1
 
     # Define o diretório atual onde o script está localizado
-    current_dir = Path(__file__).parent
+    if getattr(sys, 'frozen', False):
+        current_dir = Path(sys.argv[0]).parent
+    else:
+        current_dir = Path(__file__).parent
+
+    print(f"Diretório atual: {current_dir}")
 
     # Define o arquivo de saída
     output_file_path = current_dir / "output.txt"
+
+    print(f"Arquivo de saída: {output_file_path}")
 
     # Encontra todos os arquivos PDF na pasta atual
     pdf_files = list(current_dir.glob("*.pdf"))
