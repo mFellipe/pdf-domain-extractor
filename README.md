@@ -2,12 +2,17 @@
 - Este script foi criado com a finalidade de extrair a lista de bloqueio de sites da anatel
 - Deve ser um pdf com 3 clunas sendo a terceira que deve conter os endereços para bloquear.
 
-## Como utilizar?
+## Como instalar?
+- Baixe o binário em releases coloque na mesma pasta dos arquivos .pdf que deseja extrair e rode o comando.
+```chmod +x && sudo mv ./pdf-extractor* /usr/bin/pdf-extractor```
+
+
+## Como utilizar o codigo fonte?
 - Utilize os comandos abaixo para realizar a instalação das dependências.
 
 
 - [1] Clone o repositório em qualquer pasta
-```git clone https://github.com/mFellipe/pdf-domain-extrator.git && cd pdf-domain-extrator```
+```git clone https://github.com/mFellipe/pdf-domain-extractor.git && cd pdf-domain-extractor```
 
 - [2] Crie um venv
 ```python3 -m venv .venv```
