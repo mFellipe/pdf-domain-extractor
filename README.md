@@ -5,14 +5,20 @@
 ## Como utilizar?
 - Utilize os comandos abaixo para realizar a instalação das dependências.
 
-- Crie um venv
+
+- [1] Clone o repositório em qualquer pasta
+```git clone https://github.com/mFellipe/pdf-domain-extrator.git && cd pdf-domain-extrator```
+
+- [2] Crie um venv
 ```python3 -m venv .venv```
 
-- Ative o venv
+- [3] Ative o venv
 ```source .venv/bin/activate```
 
-- Instale o pdfplumber
+- [4] Instale o pdfplumber
 ```pip install pdfplumber```
 
-- Adicione todos os arquivos pdf dentro da pasta contendo o main.py e rode o script
+- [5] Adicione todos os arquivos pdf dentro da pasta contendo o main.py e rode o script
 ```python3 main.py```
+
+- Obs: após fazer os passos uma primeira vez, para utilizar o programa novamente utilize apenas os comandos 3 e 5 na pasta do projeto.
