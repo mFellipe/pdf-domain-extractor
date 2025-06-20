@@ -1,12 +1,11 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 import pdfplumber
-import os
 from pathlib import Path
 import concurrent.futures
 import sys
 import validators
+
 
 def extract_data_from_pdf(pdf_path, col_extract):
     """
@@ -35,23 +34,31 @@ def extract_data_from_pdf(pdf_path, col_extract):
                         for row_index, row in enumerate(table, start=1):
                             # Verifica se a linha tem pelo menos col_extract+1 colunas e pula a primeira linha (cabeçalho)
                             if len(row) > col_extract and row_index > 1:
-
                                 dado_da_coluna = row[col_extract].strip()
 
                                 # Formata a linha para o arquivo de output
-                                formatted_line = f"local-zone: \"{dado_da_coluna}\" always_nxdomain\n"
+                                formatted_line = (
+                                    f'local-zone: "{dado_da_coluna}" always_nxdomain\n'
+                                )
 
                                 # Já descarto colunas vazias e endereços IP
-                                if dado_da_coluna and not validators.ipv4(dado_da_coluna) and not validators.ipv6(dado_da_coluna):
-
+                                if (
+                                    dado_da_coluna
+                                    and not validators.ipv4(dado_da_coluna)
+                                    and not validators.ipv6(dado_da_coluna)
+                                ):
                                     # Valida se é um dominio valido... se não for, adiciona no output de erros
                                     if validators.domain(dado_da_coluna):
                                         output_lines.append(formatted_line)
                                         # Imprime a mensagem de log
-                                        print(f"[SUCESSO] - Arquivo: {pdf_path.name} | Página {i}, Tabela {table_index}, Linha {row_index}: '{dado_da_coluna}' adicionada no output")
+                                        print(
+                                            f"[SUCESSO] - Arquivo: {pdf_path.name} | Página {i}, Tabela {table_index}, Linha {row_index}: '{dado_da_coluna}' adicionada no output"
+                                        )
                                     else:
                                         output_lines_erro.append(formatted_line)
-                                        print(f"[ERROR] - Arquivo: {pdf_path.name} | Página {i}, Tabela {table_index}, Linha {row_index}: '{dado_da_coluna}' adicionada no output de erros")
+                                        print(
+                                            f"[ERROR] - Arquivo: {pdf_path.name} | Página {i}, Tabela {table_index}, Linha {row_index}: '{dado_da_coluna}' adicionada no output de erros"
+                                        )
                 else:
                     # Indica que a página não possui tabelas
                     print(f"Arquivo: {pdf_path.name} | Página {i}: Não possui tabelas.")
@@ -60,11 +67,13 @@ def extract_data_from_pdf(pdf_path, col_extract):
 
     return output_lines, output_lines_erro
 
-def main():
 
+def main():
     # Solicita ao usuário qual a coluna que ele quer extrair
     try:
-        col_extract = int(input("Digite o número da coluna que deseja extrair (1,2,3...): ")) - 1
+        col_extract = (
+            int(input("Digite o número da coluna que deseja extrair (1,2,3...): ")) - 1
+        )
         if col_extract < 0:
             raise ValueError("O número da coluna deve ser positivo.")
     except ValueError as ve:
@@ -72,7 +81,7 @@ def main():
         return
 
     # Define o diretório atual onde o script está localizado
-    if getattr(sys, 'frozen', False):
+    if getattr(sys, "frozen", False):
         current_dir = Path(sys.argv[0]).parent
     else:
         current_dir = Path(__file__).parent
@@ -100,7 +109,10 @@ def main():
     with concurrent.futures.ProcessPoolExecutor() as executor:
         # Mapeia a função extract_data_from_pdf para cada PDF encontrado
         # Isso retorna um gerador de futuros
-        futures = {executor.submit(extract_data_from_pdf, pdf_path, col_extract): pdf_path for pdf_path in pdf_files}
+        futures = {
+            executor.submit(extract_data_from_pdf, pdf_path, col_extract): pdf_path
+            for pdf_path in pdf_files
+        }
 
         for future in concurrent.futures.as_completed(futures):
             pdf_path = futures[future]
@@ -116,20 +128,27 @@ def main():
     try:
         with open(output_file_path, "w", encoding="utf-8") as output_file:
             output_file.writelines(all_output_lines)
-        print(f"Extração concluída. Os dados válidos foram salvos em '{output_file_path}'.")
+        print(
+            f"Extração concluída. Os dados válidos foram salvos em '{output_file_path}'."
+        )
     except Exception as e:
         print(f"Erro ao escrever no arquivo de saída: {e}")
 
     # Escreve todas as linhas com erros no arquivo de erros
     if all_error_lines:
         try:
-            with open(error_output_file_path, "w", encoding="utf-8") as error_output_file:
+            with open(
+                error_output_file_path, "w", encoding="utf-8"
+            ) as error_output_file:
                 error_output_file.writelines(all_error_lines)
-            print(f"Alguns dados apresentaram erros e foram salvos em '{error_output_file_path}'.")
+            print(
+                f"Alguns dados apresentaram erros e foram salvos em '{error_output_file_path}'."
+            )
         except Exception as e:
             print(f"Erro ao escrever no arquivo de erros: {e}")
     else:
         print("Nenhum erro encontrado durante a extração.")
+
 
 if __name__ == "__main__":
     main()
